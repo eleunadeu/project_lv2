@@ -24,11 +24,8 @@ public class UserService {
 
     // 회원 가입 기능
     public void signup(SignupRequestDto requestDto) {
-        // 중복 검사 없는 회원 정보
-        String name = requestDto.getName();
+        // 비밀번호 암호화
         String password = passwordEncoder.encode(requestDto.getPassword());
-        String sex = requestDto.getSex();
-        String address = requestDto.getAddress();
 
         // 주민번호 중복 확인
         String idNumber = requestDto.getIdNumber();
@@ -54,7 +51,7 @@ public class UserService {
         }
 
         // 사용자 등록
-        User user = new User(name, password, sex, idNumber, phoneNumber, address, role);
+        User user = new User(requestDto, password, role);
         userRepository.save(user);
     }
 

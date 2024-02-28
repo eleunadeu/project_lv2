@@ -1,5 +1,6 @@
 package com.sparta.library.entity;
 
+import com.sparta.library.dto.SignupRequestDto;
 import com.sparta.library.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -34,20 +35,17 @@ public class User {
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    public User(UserRequestDto requestDto) {
-        this.user_id = requestDto.getUser_id();
+    public User(SignupRequestDto requestDto, String password, UserRoleEnum role) {
         this.name = requestDto.getName();
         this.sex = requestDto.getSex();
         this.idNumber = requestDto.getIdNumber();
         this.phoneNumber = requestDto.getPhoneNumber();
         this.address = requestDto.getAddress();
-        this.password = requestDto.getPassword();
-        this.role = requestDto.getRole();
+        this.password = password;
+        this.role = role;
     }
-
 
 }

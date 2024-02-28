@@ -1,5 +1,6 @@
 package com.sparta.library.dto;
 
+import com.sparta.library.entity.UserRoleEnum;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,8 @@ public class SignupRequestDto {
     private String address;
     @NotBlank
     private String phoneNumber;
+
+    private UserRoleEnum role;
     private boolean admin = false;
     private String adminToken = "";
 }
