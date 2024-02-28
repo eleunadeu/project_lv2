@@ -1,5 +1,6 @@
 package com.sparta.library.entity;
 
+import com.sparta.library.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,13 +8,13 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name="users")
+@Table(name = "user")
 public class User {
 
     // 회원 정보
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long user_id;
 
     @Column(nullable = false)
     private String name;
@@ -37,13 +38,16 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    public User(String name, String password, String sex, String idNumber, String phoneNumber, String address, UserRoleEnum role) {
-        this.name = name;
-        this.idNumber = idNumber;
-        this.sex = sex;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.role = role;
+    public User(UserRequestDto requestDto) {
+        this.user_id = requestDto.getUser_id();
+        this.name = requestDto.getName();
+        this.sex = requestDto.getSex();
+        this.idNumber = requestDto.getIdNumber();
+        this.phoneNumber = requestDto.getPhoneNumber();
+        this.address = requestDto.getAddress();
+        this.password = requestDto.getPassword();
+        this.role = requestDto.getRole();
     }
+
+
 }
