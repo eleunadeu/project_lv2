@@ -1,5 +1,6 @@
 package com.sparta.library.dto;
 
+import com.sparta.library.entity.UserRoleEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -13,5 +14,5 @@ public class UserRequestDto {
     private String phoneNumber;
     private String address;
     private String password;
-    private String role;
+    private UserRoleEnum role;
 }

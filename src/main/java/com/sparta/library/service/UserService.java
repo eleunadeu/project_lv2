@@ -60,10 +60,10 @@ public class UserService {
 
     public UserInfoDto getUserInfo(Long id, UserDetailsImpl userDetails) {
         // 회원여부 확인
-        User user = userRepository.findById(userDetails.getUser().getUserId())
+        User user = userRepository.findById(userDetails.getUser().getUser_id())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        if (user.getUserId() == id) {
+        if (user.getUser_id() == id) {
             // 회원 아이디 기준으로 회원 정보 가져오기
             return UserInfoDto.builder()
                     .name(user.getName())
