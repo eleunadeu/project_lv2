@@ -1,0 +1,86 @@
+package com.sparta.library.service;
+
+import com.sparta.library.dto.SignupRequestDto;
+import com.sparta.library.dto.UserInfoDto;
+import com.sparta.library.entity.User;
+import com.sparta.library.entity.UserRoleEnum;
+import com.sparta.library.repository.UserRepository;
+import com.sparta.library.security.UserDetailsImpl;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    // ADMIN_TOKEN
+    private final String ADMIN_TOKEN = "";
+
+    // 회원 가입 기능
+    public void signup(SignupRequestDto requestDto) {
+        // 중복 검사 없는 회원 정보
+        String username = requestDto.getUsername();
+        String password = passwordEncoder.encode(requestDto.getPassword());
+        String sex = requestDto.getSex();
+        String address = requestDto.getAddress();
+
+        // 주민번호 중복 확인
+        String idNumber = requestDto.getIdNumber();
+        Optional<User> checkIdNumber = userRepository.findByIdNumber(idNumber);
+        if (checkIdNumber.isPresent()) {
+            throw new IllegalArgumentException("중복된 주민번호가 존재합니다.");
+        }
+
+        // 전화 번호 중복 확인
+        String phoneNumber = requestDto.getPhoneNumber();
+        Optional<User> checkPhoneNumber = userRepository.findByPhoneNumber(phoneNumber);
+        if (checkPhoneNumber.isPresent()) {
+            throw new IllegalArgumentException("중복된 Email 입니다.");
+        }
+
+        // 사용자 ROLE 확인
+        UserRoleEnum role = UserRoleEnum.USER;
+        if (requestDto.isAdmin()) {
+            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
+                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
+            }
+            role = UserRoleEnum.ADMIN;
+        }
+
+        // 사용자 등록
+        User user = new User(username, password, sex, idNumber, phoneNumber, address, role);
+        userRepository.save(user);
+    }
+
+    public UserInfoDto getUserInfo(UserDetailsImpl userDetails) {
+        // 회원 아이디로 유저 정보 가져오기
+        User user = userRepository.findById(userDetails.getUser().getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        return UserInfoDto.builder()
+                .username(user.getUsername())
+                .sex(user.getSex())
+                .phoneNumber(user.getPhoneNumber())
+                .address(user.getAddress())
+                .isAdmin(user.getRole() == UserRoleEnum.ADMIN)
+                .build();
+    }
+
+    public UserInfoDto getUserdata(Long userId) {
+        // 회원 아이디로 유저 정보 가져오기
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        return UserInfoDto.builder()
+                .username(user.getUsername())
+                .sex(user.getSex())
+                .phoneNumber(user.getPhoneNumber())
+                .address(user.getAddress())
+                .isAdmin(user.getRole() == UserRoleEnum.ADMIN)
+                .build();
+    }
+}
