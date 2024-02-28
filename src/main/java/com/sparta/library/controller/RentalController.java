@@ -28,7 +28,7 @@ public class RentalController {
 
     @PutMapping("/rental")
     public ResponseEntity<RentalResponseDto> updateRental(@RequestBody RentalRequestDto requestDto) {
-        RentalResponseDto responseDto = rentalService.updateRental(requestDto);
+        RentalResponseDto responseDto = rentalService.updateRental(requestDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "반납이 불가합니다."));
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
 
     }

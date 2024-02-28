@@ -13,5 +13,6 @@ public class UserRequestDto {
     private String phoneNumber;
     private String address;
     private String password;
+    private Boolean isBorrowed;
 
 }

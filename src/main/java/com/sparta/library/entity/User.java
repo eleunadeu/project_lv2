@@ -37,6 +37,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private Boolean isBorrowed = false;
+
     @OneToMany(mappedBy = "user")
     private List<Rental> rentalList = new ArrayList<>();
 

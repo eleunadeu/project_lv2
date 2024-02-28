@@ -12,6 +12,7 @@ public class UserResponseDto {
     private String phoneNumber;
     private String address;
     private String password;
+    private Boolean isBorrowed;
 
     public UserResponseDto(User user) {
         this.user_id = user.getUser_id();
@@ -21,6 +22,7 @@ public class UserResponseDto {
         this.phoneNumber = user.getPhoneNumber();
         this.address = user.getAddress();
         this.password = user.getPassword();
+        this.isBorrowed = user.getIsBorrowed();
     }
 
 }

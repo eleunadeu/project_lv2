@@ -34,8 +34,7 @@ public class Book {
     @Column(nullable = false)
     private String registerDate;
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean isLoaned;
+    private Boolean isLoaned = false;
 
     @OneToMany(mappedBy = "book")
     private List<Rental> rentalList = new ArrayList<>();
