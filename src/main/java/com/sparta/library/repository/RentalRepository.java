@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RentalRepository extends JpaRepository<Rental, Long> {
-    Optional<Rental> findFirstByBookIdOrderByUserIdDesc(Long id);
+    Optional<Rental> findByBookIdAndUserId(Long bookId, Long userId);
 
     List<Rental> findAllByOrderByCreatedAtAsc();
 

@@ -4,8 +4,10 @@ import com.sparta.library.dto.RentalRequestDto;
 import com.sparta.library.dto.RentalResponseDto;
 import com.sparta.library.entity.Book;
 import com.sparta.library.entity.Rental;
+import com.sparta.library.entity.User;
 import com.sparta.library.repository.BookRepository;
 import com.sparta.library.repository.RentalRepository;
+import com.sparta.library.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,12 +23,15 @@ import java.util.Optional;
 public class RentalService {
     private final RentalRepository rentalRepository;
     private final BookRepository bookRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public Optional<RentalResponseDto> createRental(RentalRequestDto requestDto) {
         Long bookId = requestDto.getBook_id();
+        Long userId = requestDto.getUser_id();
         Book resBook = bookRepository.findById(bookId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 책은 존재하지 않습니다."));
-        Rental rental = new Rental(requestDto);
+        User resUser = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 유저는 존재하지 않습니다."));
+        Rental rental = new Rental(requestDto, resBook, resUser);
         if (!rental.getIsReturned() || resBook.getIsLoaned()) {
             return Optional.empty();
         } else {
@@ -40,12 +45,11 @@ public class RentalService {
 
 
     @Transactional
-    public RentalResponseDto updateRental(Long id) {
-        Rental resRental = rentalRepository.findFirstByBookIdOrderByUserIdDesc(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 책은 존재하지 않습니다."));
-        System.out.println("resRental.getIsReturned() = " + resRental.getIsReturned());
-        System.out.println("resRental.getUser_id() = " + resRental.getUserId());
-        System.out.println("resRental.getBook_id() = " + resRental.getBookId());
-        Book resBook = bookRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 책은 존재하지 않습니다."));
+    public RentalResponseDto updateRental(RentalRequestDto requestDto) {
+        Long bookId = requestDto.getBook_id();
+        Long userId = requestDto.getUser_id();
+        Rental resRental = rentalRepository.findByBookIdAndUserId(bookId, userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 책은 존재하지 않습니다."));
+        Book resBook = bookRepository.findById(bookId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 책은 존재하지 않습니다."));
         resBook.update(false);
         resRental.update(true, LocalDate.now());
         RentalResponseDto responseDto = new RentalResponseDto(resRental);

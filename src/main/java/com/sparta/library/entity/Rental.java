@@ -19,11 +19,23 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "bookId")
+    @Column()
     private Long bookId;
 
-    @Column(name = "userId")
+    @Column()
+    private String title;
+
+    @Column()
+    private String author;
+
+    @Column()
     private Long userId;
+
+    @Column()
+    private String name;
+
+    @Column()
+    private String phoneNumber;
 
     @Column(nullable = false)
     private Boolean isReturned;
@@ -41,6 +53,19 @@ public class Rental {
         this.id = getId();
         this.bookId = requestDto.getBook_id();
         this.userId = requestDto.getUser_id();
+        this.isReturned = getIsReturned() == null ? true : getIsReturned();
+        this.returnedAt = getReturnedAt();
+
+    }
+
+    public Rental(RentalRequestDto requestDto, Book resBook, User resUser) {
+        this.id = getId();
+        this.bookId = requestDto.getBook_id();
+        this.title = resBook.getTitle();
+        this.author = resBook.getAuthor();
+        this.userId = requestDto.getUser_id();
+        this.name = resUser.getName();
+        this.phoneNumber = resUser.getPhoneNumber();
         this.isReturned = getIsReturned() == null ? true : getIsReturned();
         this.returnedAt = getReturnedAt();
 
