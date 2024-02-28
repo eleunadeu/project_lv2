@@ -1,5 +1,6 @@
 package com.sparta.library.entity;
 
+import com.sparta.library.dto.SignupRequestDto;
 import com.sparta.library.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -15,6 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "user")
 public class User {
+
+    // 회원 정보
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long user_id;
@@ -23,19 +26,22 @@ public class User {
     private String name;
 
     @Column(nullable = false)
-    private String sex;
+    private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String idNumber;
 
     @Column(nullable = false)
+    private String sex;
+
+    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
-    private String password;
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
 
     @Column(nullable = false)
     private Boolean isBorrowed = false;
@@ -44,16 +50,14 @@ public class User {
     private List<Rental> rentalList = new ArrayList<>();
 
 
-    public User(UserRequestDto requestDto) {
-        this.user_id = requestDto.getUser_id();
+    public User(SignupRequestDto requestDto, String password, UserRoleEnum role) {
         this.name = requestDto.getName();
         this.sex = requestDto.getSex();
         this.idNumber = requestDto.getIdNumber();
         this.phoneNumber = requestDto.getPhoneNumber();
         this.address = requestDto.getAddress();
-        this.password = requestDto.getPassword();
-
+        this.password = password;
+        this.role = role;
     }
-
 
 }

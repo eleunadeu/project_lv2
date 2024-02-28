@@ -1,5 +1,6 @@
 package com.sparta.library.dto;
 
+import com.sparta.library.entity.UserRoleEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,4 +16,5 @@ public class UserRequestDto {
     private String password;
     private Boolean isBorrowed;
 
+    private UserRoleEnum role;
 }
