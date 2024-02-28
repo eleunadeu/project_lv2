@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @Getter
 @NoArgsConstructor
@@ -29,10 +27,10 @@ public class Book {
     private String publish;
 
     @Column(nullable = false)
-    private String registdate;
+    private String registerDate;
 
-    @Transient
-    private List<User> users;
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isLoaned;
 
 
     public Book(BookRequestDto requestDto) {
@@ -41,8 +39,13 @@ public class Book {
         this.author = requestDto.getAuthor();
         this.language = requestDto.getLanguage();
         this.publish = requestDto.getPublish();
-        this.registdate = requestDto.getRegistdate();
+        this.registerDate = requestDto.getRegisterDate();
+        this.isLoaned = requestDto.getIsLoaned() == null? false : requestDto.getIsLoaned();
 
+    }
+
+    public void update(Boolean isLoaned) {
+        this.isLoaned = isLoaned;
     }
 
 

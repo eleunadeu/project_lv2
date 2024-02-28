@@ -5,7 +5,9 @@ import com.sparta.library.dto.BookResponseDto;
 import com.sparta.library.entity.Book;
 import com.sparta.library.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -23,12 +25,12 @@ public class BookService {
     }
 
     public List<BookResponseDto> findBooks() {
-        return bookRepository.findAllByOrderByRegistdateAsc().stream().map(BookResponseDto::new).toList();
+        return bookRepository.findAllByOrderByRegisterDateAsc().stream().map(BookResponseDto::new).toList();
     }
 
 
     public BookResponseDto findBook(Long id) {
-        Book resBook = bookRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("선택한 책은 존재하지 않습니다."));
+        Book resBook = bookRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 책은 존재하지 않습니다."));
         BookResponseDto responseDto = new BookResponseDto(resBook);
         return responseDto;
     }

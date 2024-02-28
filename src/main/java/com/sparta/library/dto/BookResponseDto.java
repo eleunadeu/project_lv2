@@ -10,7 +10,8 @@ public class BookResponseDto {
     private String author;
     private String language;
     private String publish;
-    private String registdate;
+    private String registerDate;
+    private Boolean isLoaned;
 
     public BookResponseDto(Book book) {
         this.book_id = book.getBook_id();
@@ -18,7 +19,8 @@ public class BookResponseDto {
         this.author = book.getAuthor();
         this.language = book.getLanguage();
         this.publish = book.getPublish();
-        this.registdate = book.getRegistdate();
+        this.registerDate = book.getRegisterDate();
+        this.isLoaned = book.getIsLoaned();
 
     }
 

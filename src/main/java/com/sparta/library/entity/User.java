@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @Getter
 @NoArgsConstructor
@@ -34,8 +32,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Transient
-    private List<Book> books;
 
     public User(UserRequestDto requestDto) {
         this.user_id = requestDto.getUser_id();
@@ -43,7 +39,7 @@ public class User {
         this.sex = requestDto.getSex();
         this.idNumber = requestDto.getIdNumber();
         this.phoneNumber = requestDto.getPhoneNumber();
-        this.address = requestDto.getAdress();
+        this.address = requestDto.getAddress();
         this.password = requestDto.getPassword();
 
     }

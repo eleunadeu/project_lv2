@@ -23,7 +23,7 @@ public class BookController {
 
     }
 
-    @GetMapping("/books")
+    @GetMapping("/book")
     public ResponseEntity<List<BookResponseDto>> getBooks() {
         List<BookResponseDto> responseDto = bookService.findBooks();
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);

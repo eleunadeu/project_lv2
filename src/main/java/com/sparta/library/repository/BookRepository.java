@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
-    List<Book> findAllByOrderByRegistdateAsc();
+    List<Book> findAllByOrderByRegisterDateAsc();
 
     Optional<Book> findById(Long id);
 

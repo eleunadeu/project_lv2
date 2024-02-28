@@ -11,5 +11,6 @@ public class BookRequestDto {
     private String author;
     private String language;
     private String publish;
-    private String registdate;
+    private String registerDate;
+    private Boolean isLoaned;
 }

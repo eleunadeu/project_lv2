@@ -11,7 +11,7 @@ public class UserRequestDto {
     private String sex;
     private String idNumber;
     private String phoneNumber;
-    private String adress;
+    private String address;
     private String password;
 
 }
