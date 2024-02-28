@@ -4,9 +4,14 @@ import com.sparta.library.dto.BookRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "book")
 public class Book {
@@ -32,6 +37,9 @@ public class Book {
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isLoaned;
 
+    @OneToMany(mappedBy = "book")
+    private List<Rental> rentalList = new ArrayList<>();
+
 
     public Book(BookRequestDto requestDto) {
         this.book_id = requestDto.getBook_id();
@@ -40,12 +48,8 @@ public class Book {
         this.language = requestDto.getLanguage();
         this.publish = requestDto.getPublish();
         this.registerDate = requestDto.getRegisterDate();
-        this.isLoaned = requestDto.getIsLoaned() == null? false : requestDto.getIsLoaned();
+        this.isLoaned = requestDto.getIsLoaned() == null ? false : requestDto.getIsLoaned();
 
-    }
-
-    public void update(Boolean isLoaned) {
-        this.isLoaned = isLoaned;
     }
 
 

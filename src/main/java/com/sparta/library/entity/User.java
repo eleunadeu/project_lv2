@@ -4,8 +4,13 @@ import com.sparta.library.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Setter
 @Getter
 @NoArgsConstructor
 @Table(name = "user")
@@ -31,6 +36,9 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Rental> rentalList = new ArrayList<>();
 
 
     public User(UserRequestDto requestDto) {
