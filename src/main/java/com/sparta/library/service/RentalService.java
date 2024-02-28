@@ -31,11 +31,14 @@ public class RentalService {
         Long userId = requestDto.getUser_id();
         Book resBook = bookRepository.findById(bookId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 책은 존재하지 않습니다."));
         User resUser = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 유저는 존재하지 않습니다."));
-        Rental rental = new Rental(requestDto, resBook, resUser);
-        if (!rental.getIsReturned() || resBook.getIsLoaned()) {
+        Rental rental = new Rental();
+        rental.setUser(resUser);
+        rental.setBook(resBook);
+        if (!rental.getIsReturned() || rental.getBook().getIsLoaned() || rental.getUser().getIsBorrowed()) {
             return Optional.empty();
         } else {
-            resBook.update(true);
+            rental.getBook().setIsLoaned(true);
+            rental.getUser().setIsBorrowed(true);
             rental.update(false);
             rentalRepository.save(rental);
             return Optional.of(new RentalResponseDto(rental));
@@ -45,15 +48,23 @@ public class RentalService {
 
 
     @Transactional
-    public RentalResponseDto updateRental(RentalRequestDto requestDto) {
+    public Optional<RentalResponseDto> updateRental(RentalRequestDto requestDto) {
         Long bookId = requestDto.getBook_id();
         Long userId = requestDto.getUser_id();
-        Rental resRental = rentalRepository.findByBookIdAndUserId(bookId, userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 책은 존재하지 않습니다."));
         Book resBook = bookRepository.findById(bookId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 책은 존재하지 않습니다."));
-        resBook.update(false);
-        resRental.update(true, LocalDate.now());
-        RentalResponseDto responseDto = new RentalResponseDto(resRental);
-        return responseDto;
+        User resUser = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 회원은 존재하지 않습니다."));
+        Rental resRental = rentalRepository.findFirstByBookAndUserOrderByIdDesc(resBook, resUser).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "선택한 정보가 존재하지 않습니다."));
+
+        if (resRental.getIsReturned() || !resRental.getBook().getIsLoaned() || !resRental.getUser().getIsBorrowed()) {
+            return Optional.empty();
+        } else {
+            resRental.getBook().setIsLoaned(false);
+            resRental.getUser().setIsBorrowed(false);
+            resRental.update(true, LocalDate.now());
+            return Optional.of(new RentalResponseDto(resRental));
+
+        }
+
     }
 
     public List<RentalResponseDto> findRental() {

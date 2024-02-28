@@ -1,17 +1,18 @@
 package com.sparta.library.entity;
 
-import com.sparta.library.dto.RentalRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 
 @Entity
+@Setter
 @Getter
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "rental")
 @EntityListeners(AuditingEntityListener.class)
 public class Rental {
@@ -19,26 +20,17 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column()
-    private Long bookId;
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    private Book book;
 
-    @Column()
-    private String title;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column()
-    private String author;
-
-    @Column()
-    private Long userId;
-
-    @Column()
-    private String name;
-
-    @Column()
-    private String phoneNumber;
 
     @Column(nullable = false)
-    private Boolean isReturned;
+    private Boolean isReturned = true;
 
 
     @Column(nullable = false, updatable = false)
@@ -48,28 +40,6 @@ public class Rental {
     @Column()
     private LocalDate returnedAt;
 
-
-    public Rental(RentalRequestDto requestDto) {
-        this.id = getId();
-        this.bookId = requestDto.getBook_id();
-        this.userId = requestDto.getUser_id();
-        this.isReturned = getIsReturned() == null ? true : getIsReturned();
-        this.returnedAt = getReturnedAt();
-
-    }
-
-    public Rental(RentalRequestDto requestDto, Book resBook, User resUser) {
-        this.id = getId();
-        this.bookId = requestDto.getBook_id();
-        this.title = resBook.getTitle();
-        this.author = resBook.getAuthor();
-        this.userId = requestDto.getUser_id();
-        this.name = resUser.getName();
-        this.phoneNumber = resUser.getPhoneNumber();
-        this.isReturned = getIsReturned() == null ? true : getIsReturned();
-        this.returnedAt = getReturnedAt();
-
-    }
 
     public void update(Boolean isReturned) {
         this.isReturned = isReturned;
