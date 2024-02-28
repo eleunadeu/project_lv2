@@ -25,7 +25,7 @@ public class UserService {
     // 회원 가입 기능
     public void signup(SignupRequestDto requestDto) {
         // 중복 검사 없는 회원 정보
-        String username = requestDto.getUsername();
+        String name = requestDto.getName();
         String password = passwordEncoder.encode(requestDto.getPassword());
         String sex = requestDto.getSex();
         String address = requestDto.getAddress();
@@ -54,33 +54,27 @@ public class UserService {
         }
 
         // 사용자 등록
-        User user = new User(username, password, sex, idNumber, phoneNumber, address, role);
+        User user = new User(name, password, sex, idNumber, phoneNumber, address, role);
         userRepository.save(user);
     }
 
-    public UserInfoDto getUserInfo(UserDetailsImpl userDetails) {
-        // 회원 아이디로 유저 정보 가져오기
+    public UserInfoDto getUserInfo(Long id, UserDetailsImpl userDetails) {
+        // 회원여부 확인
         User user = userRepository.findById(userDetails.getUser().getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-        return UserInfoDto.builder()
-                .username(user.getUsername())
-                .sex(user.getSex())
-                .phoneNumber(user.getPhoneNumber())
-                .address(user.getAddress())
-                .isAdmin(user.getRole() == UserRoleEnum.ADMIN)
-                .build();
-    }
 
-    public UserInfoDto getUserdata(Long userId) {
-        // 회원 아이디로 유저 정보 가져오기
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-        return UserInfoDto.builder()
-                .username(user.getUsername())
-                .sex(user.getSex())
-                .phoneNumber(user.getPhoneNumber())
-                .address(user.getAddress())
-                .isAdmin(user.getRole() == UserRoleEnum.ADMIN)
-                .build();
+        if (user.getUserId() == id) {
+            // 회원 아이디 기준으로 회원 정보 가져오기
+            return UserInfoDto.builder()
+                    .name(user.getName())
+                    .sex(user.getSex())
+                    .phoneNumber(user.getPhoneNumber())
+                    .address(user.getAddress())
+                    .isAdmin(user.getRole() == UserRoleEnum.ADMIN)
+                    .build();
+        } else {
+            System.out.println("다른 유저의 정보는 확인할 수 없습니다.");
+            return UserInfoDto.builder().build(); // 빈 빌더로 기본값을 가진 객체를 생성
+        }
     }
 }

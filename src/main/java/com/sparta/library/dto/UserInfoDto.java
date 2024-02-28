@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class UserInfoDto {
-    String username;
+    String name;
     String sex;
     String phoneNumber;
     String address;

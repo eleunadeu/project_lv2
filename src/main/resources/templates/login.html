@@ -48,14 +48,14 @@
     const host = 'http://' + window.location.host;
 
     function onLogin() {
-        let username = $('#username').val();
+        let name = $('#name').val();
         let password = $('#password').val();
 
         $.ajax({
             type: "POST",
             url: `/api/user/login`,
             contentType: "application/json",
-            data: JSON.stringify({username: username, password: password}),
+            data: JSON.stringify({username: name, password: password}),
         })
             .done(function (res, status, xhr) {
                 const token = xhr.getResponseHeader('Authorization');

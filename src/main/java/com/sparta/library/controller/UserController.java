@@ -35,9 +35,10 @@ public class UserController {
         return "login";
     }
 
+
     //도서관 회원가입 기능(회원 등록)
     @PostMapping("/user/signup")
-    public String signup(@Valid SignupRequestDto requestDto, BindingResult bindingResult) {
+    public String signup(@RequestBody @Valid SignupRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if (fieldErrors.size() > 0) {
@@ -55,14 +56,8 @@ public class UserController {
     // 회원 관련 정보 받기
     @GetMapping("/user/{id}")
     @ResponseBody
-    public UserInfoDto getUserdata(@PathVariable Long id) {
-        return userService.getUserdata(id);
-    }
-
-    @GetMapping("/user-info")
-    @ResponseBody
-    public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
         // 현재 인증된 사용자의 ID를 사용해 사용자 정보 조회
-        return userService.getUserInfo(userDetails);
+        return userService.getUserInfo(id, userDetails);
     }
 }

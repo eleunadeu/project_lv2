@@ -20,7 +20,7 @@ $(document).ready(function () {
             url: '/api/user-info', // 서버에서 설정한 사용자 정보 조회 API 경로
             success: function(userInfo) {
                 // 사용자 정보를 페이지에 표시
-                $('#username').text(userInfo.username);
+                $('#name').text(userInfo.name);
                 $('#sex').text(userInfo.sex);
                 $('#phoneNumber').text(userInfo.phoneNumber);
                 $('#address').text(userInfo.address);
